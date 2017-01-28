@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "Content/less/AdminLTE.css",
+    "inputFile": "Content/less/AdminLTE.less"
+  },
+  {
+    "outputFile": "Content/less/skins/skin-blue.css",
+    "inputFile": "Content/less/skins/skin-blue.less"
+  }
+]
