@@ -1,0 +1,11 @@
+﻿@model HomeViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@foreach (var website in Model.Websites)
+{
+    <p>@website.Name - @website.PrimaryUrl</p>
+}
