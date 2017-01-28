@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
+using SiteManager.Core.Websites;
 
-using SiteManager.Models;
-
-namespace SiteManager.Repositories
+namespace SiteManager.Core.DependencyInjection
 {
     public interface IWebsiteRepository : IRepository
     {

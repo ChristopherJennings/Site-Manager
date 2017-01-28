@@ -4,13 +4,15 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using Microsoft.Web.Administration;
-using SiteManager.Models;
+using SiteManager.Core.DependencyInjection;
+using SiteManager.Core.Websites;
+using SiteManager.IIS.Extensions;
 
-namespace SiteManager.Repositories.Implementations
+namespace SiteManager.IIS.Repositories
 {
     public class WebsiteRepository : IWebsiteRepository
     {
-        private static ServerManager serverManager = ServerManager.OpenRemote("127.0.0.1");
+        private static ServerManager serverManager = ServerManager.OpenRemote("127.0.0.1"); 
 
         public IEnumerable<Website> GetWebsites()
         {
@@ -26,7 +28,8 @@ namespace SiteManager.Repositories.Implementations
                 {
                     Name = site.Name,
                     PrimaryUrl = Urls.First(),
-                    OtherUrls = Urls.Skip(1)
+                    OtherUrls = Urls.Skip(1),
+                    Status = site.State.ToStatus()
                 };
             }
 

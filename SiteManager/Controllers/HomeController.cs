@@ -5,13 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using SiteManager.Repositories.Implementations;
+using SiteManager.Core.DependencyInjection;
 
 namespace SiteManager.Controllers
 {
     public class HomeController : Controller
     {
-        // GET: Home
+        private readonly IWebsiteRepository websiteRepository;
+
+        public HomeController(IWebsiteRepository websiteRepository)
+        {
+            this.websiteRepository = websiteRepository;
+        }
+
         public ActionResult Index()
         {
             //var homeViewModel = new HomeViewModel() {
@@ -23,9 +29,8 @@ namespace SiteManager.Controllers
             //    }
             //};
 
-            var repo = new WebsiteRepository();
             var homeViewModel = new HomeViewModel() {
-                Websites = repo.GetWebsites().ToList()
+                Websites = websiteRepository.GetWebsites().ToList()
             };
 
             return View(homeViewModel);
