@@ -35,5 +35,17 @@ namespace SiteManager.Controllers
 
             return View(homeViewModel);
         }
+
+        public ActionResult Start(string name)
+        {
+            websiteRepository.StartWebsite(name);
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Stop(string name)
+        {
+            websiteRepository.StopWebsite(name);
+            return RedirectToAction("Index");
+        }
     }
 }

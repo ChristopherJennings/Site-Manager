@@ -53,5 +53,17 @@ namespace SiteManager.IIS.Repositories
 
             return results;
         }
+
+        public void StartWebsite(string name)
+        {
+            var site = serverManager.Sites[name];
+            site.Start();
+        }
+
+        public void StopWebsite(string name)
+        {
+            var site = serverManager.Sites[name];
+            site.Stop();
+        }
     }
 }

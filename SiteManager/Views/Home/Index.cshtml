@@ -22,58 +22,61 @@
                             <th style="width: 40px">Status</th>
                         </tr>
                         @for (int i = 0; i < Model.Websites.Count; i++)
-                    {
-                        var website = Model.Websites[i];
-                        var badgeColor = string.Empty;
-                        var disabled = false;
-
-                        switch (website.Status)
                         {
-                            case SiteManager.Core.Websites.Status.Started:
-                                badgeColor = "bg-green";
-                                break;
-                            case SiteManager.Core.Websites.Status.Stopped:
-                                badgeColor = "bg-red";
-                                disabled = true;
-                                break;
-                            case SiteManager.Core.Websites.Status.Starting:
-                            case SiteManager.Core.Websites.Status.Stopping:
-                                badgeColor = "bg-yellow";
-                                disabled = true;
-                                break;
-                        }
+                            var website = Model.Websites[i];
+                            var badgeColor = string.Empty;
+                            var disabled = false;
+                            var startStopTarget = string.Empty;
+                            var startStopIcon = string.Empty;
+
+                            switch (website.Status)
+                            {
+                                case SiteManager.Core.Websites.Status.Started:
+                                    badgeColor = "bg-green";
+                                    startStopTarget = Url.Action("Stop", new { name = website.Name });
+                                    startStopIcon = "stop";
+                                    break;
+                                case SiteManager.Core.Websites.Status.Stopped:
+                                    badgeColor = "bg-red";
+                                    disabled = true;
+                                    startStopTarget = Url.Action("Start", new { name = website.Name });
+                                    startStopIcon = "play";
+                                    break;
+                                case SiteManager.Core.Websites.Status.Starting:
+                                case SiteManager.Core.Websites.Status.Stopping:
+                                    badgeColor = "bg-yellow";
+                                    disabled = true;
+                                    break;
+                            }
 
                             <tr class="@(disabled ? "text-muted" : string.Empty)">
                                 <td>@(i + 1).</td>
                                 <td>@website.Name</td>
                                 <td>
-                                    @if (disabled)
-                                {
-                                        <a href="@website.PrimaryUrl" class="btn btn-default btn-flat disabled">@website.PrimaryUrl</a>
-                                }
-                                else
-                                {
-                                        <div class="btn-group">
-                                            <a href="@website.PrimaryUrl" class="btn btn-default btn-flat" target="_blank">@website.PrimaryUrl</a>
-                                            @if (website.OtherUrls.Count() > 0)
+                                    <div class="btn-group">
+                                        @if (!string.IsNullOrWhiteSpace(startStopTarget))
                                         {
-                                                <button type="button" class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                    <span class="sr-only">Toggle Dropdown</span>
-                                                </button>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    @foreach (var url in website.OtherUrls)
-                                                {
-                                                        <li><a href="@url" target="_blank">@url</a></li>
-                                                }
-                                                </ul>
+                                            <a href="@startStopTarget" class="btn btn-default btn-flat"><i class="fa fa-fw fa-@startStopIcon"></i></a>
                                         }
-                                        </div>
-                                }
+                                        <a href="@website.PrimaryUrl" class="btn btn-default btn-flat @(disabled ? "disabled" : string.Empty)">@website.PrimaryUrl</a>
+                                        @if (website.OtherUrls.Count() > 0)
+                                        {
+                                            <button type="button" class="btn btn-default btn-flat dropdown-toggle @(disabled ? "disabled" : string.Empty)" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                @foreach (var url in website.OtherUrls)
+                                                {
+                                                    <li><a href="@url" target="_blank">@url</a></li>
+                                                }
+                                            </ul>
+                                        }
+                                    </div>
                                 </td>
                                 <td><span class="badge @badgeColor">@website.Status.ToString()</span></td>
                             </tr>
-                    }
+                        }
                     </tbody>
                 </table>
             </div>
