@@ -12,17 +12,18 @@ namespace SiteManager.IIS.Repositories
 {
     public class WebsiteRepository : IWebsiteRepository
     {
-        private static ServerManager serverManager = ServerManager.OpenRemote("127.0.0.1"); 
+        private static ServerManager serverManager = ServerManager.OpenRemote("127.0.0.1");
 
         public IEnumerable<Website> GetWebsites()
         {
-            return serverManager.Sites.Select(x=> GetWebsite(x));
+            return serverManager.Sites.Select(x => GetWebsite(x));
         }
 
-        private Website GetWebsite(Site site) {
-            var Urls = GetUrls(site.Bindings);
+        private Website GetWebsite(Site site)
+        {
+            var Urls = GetUrls(site.Bindings, site.Applications);
 
-            if(Urls.Count > 0)
+            if (Urls.Count > 0)
             {
                 return new Website()
                 {
@@ -36,7 +37,8 @@ namespace SiteManager.IIS.Repositories
             return null;
         }
 
-        private List<string> GetUrls(BindingCollection bindings) {
+        private List<string> GetUrls(BindingCollection bindings, ApplicationCollection applications)
+        {
             var results = new List<string>();
 
             foreach (var binding in bindings)
@@ -47,8 +49,11 @@ namespace SiteManager.IIS.Repositories
                 var UrlBase = string.IsNullOrWhiteSpace(ip) ? host : ip;
                 var port = binding.EndPoint.Port == 80 ? string.Empty : ":" + binding.EndPoint.Port.ToString();
                 var url = protocol + UrlBase + port;
-
-                results.Add(url);
+                
+                foreach (var application in applications)
+                {
+                    results.Add(url + application.Path);
+                }
             }
 
             return results;
