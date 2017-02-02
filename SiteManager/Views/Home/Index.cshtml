@@ -61,7 +61,11 @@
                                 </td>
                                 <td>@website.Name</td>
                                 <td>
-                                    <a href="@website.PrimaryUrl" class="@(disabled ? "disabled" : string.Empty)" target="_blank">@website.PrimaryUrl</a>
+                                    @{ var linkText = website.PrimaryUrl + (website.PrimaryUrl.StartsWith("https") ? @" <i class=""fa fa-lock"" aria-hidden=""true""></i>" : string.Empty); }
+                                    <a href="@website.PrimaryUrl" class="@(disabled ? "disabled" : string.Empty)" target="_blank">
+                                        @linkText
+                                    </a>
+
                                     @if (website.OtherUrls.Count() > 0)
                                     {
                                         <div class="dropdown pull-right">
@@ -71,7 +75,10 @@
                                             <ul class="dropdown-menu pull-right" role="menu">
                                                 @foreach (var url in website.OtherUrls)
                                                 {
-                                                    <li><a href="@url" target="_blank">@url</a></li>
+                                                    <li>
+                                                        @{ var subLinkText = url + (url.StartsWith("https") ? @" <i class=""fa fa-lock"" aria-hidden=""true""></i>" : string.Empty); }
+                                                        <a href="@url" target="_blank">@Html.Raw(subLinkText)</a>
+                                                    </li>
                                                 }
                                             </ul>
                                         </div>

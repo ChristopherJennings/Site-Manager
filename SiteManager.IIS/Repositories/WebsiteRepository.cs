@@ -47,7 +47,7 @@ namespace SiteManager.IIS.Repositories
                 var host = string.IsNullOrWhiteSpace(binding.Host) ? "localhost" : binding.Host;
                 var ip = binding.EndPoint.Address != IPAddress.Any ? binding.EndPoint.Address.ToString() : string.Empty;
                 var UrlBase = string.IsNullOrWhiteSpace(ip) ? host : ip;
-                var port = binding.EndPoint.Port == 80 ? string.Empty : ":" + binding.EndPoint.Port.ToString();
+                var port = binding.EndPoint.Port == 80 || binding.EndPoint.Port == 443 ? string.Empty : ":" + binding.EndPoint.Port.ToString();
                 var url = protocol + UrlBase + port;
                 
                 foreach (var application in applications)
