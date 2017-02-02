@@ -3,8 +3,13 @@
     ViewBag.Title = "Site Listing";
     ViewBag.Header = "Site Listing";
     ViewBag.SubHeader = "All sites";
-
 }
+
+@section HeadStyles
+{
+    <link href="~/Scripts/plugins/datatables/dataTables.bootstrap.css" rel="stylesheet" />
+}
+
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
@@ -12,15 +17,17 @@
                 <h3 class="box-title">All Sites</h3>
             </div>
             <!-- /.box-header -->
-            <div class="box-body no-padding">
-                <table class="table table-striped">
-                    <tbody>
+            <div class="box-body">
+                <table id="siteList" class="table table-striped">
+                    <thead>
                         <tr>
-                            <th style="width: 10px">#</th>
+                            <th style="width:60px"></th>
                             <th>Name</th>
                             <th>Primary URL</th>
                             <th style="width: 40px">Status</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         @for (int i = 0; i < Model.Websites.Count; i++)
                         {
                             var website = Model.Websites[i];
@@ -50,14 +57,16 @@
                             }
 
                             <tr class="@(disabled ? "text-muted" : string.Empty)">
-                                <td>@(i + 1).</td>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(startStopTarget))
+                                    {
+                                        <a href="@startStopTarget" class="btn btn-default btn-flat"><i class="fa fa-fw fa-@startStopIcon"></i></a>
+                                    }
+                                </td>
                                 <td>@website.Name</td>
                                 <td>
                                     <div class="btn-group">
-                                        @if (!string.IsNullOrWhiteSpace(startStopTarget))
-                                        {
-                                            <a href="@startStopTarget" class="btn btn-default btn-flat"><i class="fa fa-fw fa-@startStopIcon"></i></a>
-                                        }
+                                       
                                         <a href="@website.PrimaryUrl" class="btn btn-default btn-flat @(disabled ? "disabled" : string.Empty)">@website.PrimaryUrl</a>
                                         @if (website.OtherUrls.Count() > 0)
                                         {
@@ -65,12 +74,12 @@
                                                 <span class="caret"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                @foreach (var url in website.OtherUrls)
-                                                {
-                                                    <li><a href="@url" target="_blank">@url</a></li>
-                                                }
-                                            </ul>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    @foreach (var url in website.OtherUrls)
+                                                    {
+                                                        <li><a href="@url" target="_blank">@url</a></li>
+                                                    }
+                                                </ul>
                                         }
                                     </div>
                                 </td>
@@ -85,3 +94,29 @@
         <!-- /.box -->
     </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    
+    <script>
+        $(function () {
+            $('#siteList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [[1, 'asc']],
+                "columns": [
+                    { "orderable": false },
+                    null,
+                    { "orderable": false },
+                    { "orderable": false }
+                ]
+            });
+        });
+    </script>
+}
